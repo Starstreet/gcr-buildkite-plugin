@@ -22,14 +22,14 @@ function plugin_read_list() {
 
 # For logging into the GCR registry
 if [[ "${BUILDKITE_PLUGIN_GCR_LOGIN:-}" =~ ^(true|1)$ ]] ; then
+  if [[ -z "${BUILDKITE_PLUGIN_GCR_JSON_KEY}" ]]; then
+    echo "~~~ Authenticating with GCP GCR"
+    gcr_login=$(docker login -u _json_key -p "$( echo ${BUILDKITE_PLUGIN_GCR_JSON_KEY:-} )" https://gcr.io) || exit $? 
+    gcr_login_us=$(docker login -u _json_key -p "$( echo ${BUILDKITE_PLUGIN_GCR_JSON_KEY:-} )" https://us.gcr.io) || exit $?
 
-  echo "~~~ Authenticating with GCP GCR"
-
-  gcr_login=$(docker login -u _json_key -p "$( echo ${BUILDKITE_PLUGIN_GCR_JSON_KEY:-} )" https://gcr.io) || exit $? 
-  gcr_login_us=$(docker login -u _json_key -p "$( echo ${BUILDKITE_PLUGIN_GCR_JSON_KEY:-} )" https://us.gcr.io) || exit $?
-
-  echo "$gcr_login"
-  echo "$gcr_login_us"
-else
-  echo "BUILDKITE_PLUGIN_GCR_LOGIN not found, skipping login."
+    echo "$gcr_login"
+    echo "$gcr_login_us"
+  else
+    echo "BUILDKITE_PLUGIN_GCR_JSON_KEY not found, skipping login."
+  fi
 fi
