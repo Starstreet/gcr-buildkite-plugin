@@ -30,4 +30,6 @@ if [[ "${BUILDKITE_PLUGIN_GCR_LOGIN:-}" =~ ^(true|1)$ ]] ; then
 
   echo "$gcr_login"
   echo "$gcr_login_us"
+else
+  echo "BUILDKITE_PLUGIN_GCR_LOGIN not found, skipping login."
 fi
